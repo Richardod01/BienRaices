@@ -1,5 +1,6 @@
 <?php
-    include './includes/templates/header.php';
+    require 'includes/funciones.php';
+    incluirTemplate('header');
 ?>
     <main class="contenedor seccion contenido-centrado">
         <h1>Casa en venta junto al bosque</h1>
@@ -42,5 +43,5 @@
     </main>
 
 <?php
-    include './includes/templates/footer.php';
+    incluirTemplate('footer');
 ?>
