@@ -24,14 +24,6 @@
     //ejecutar el codigo despues de que el usuario envia el formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // echo "<pre>";
-    // var_dump($_POST);
-    // echo "</pre>";
-
-    // echo "<pre>";
-    // var_dump($_FILES);
-    // echo "</pre>";
-
     $titulo = mysqli_real_escape_string($db, $_POST['titulo']);
     $precio = mysqli_real_escape_string($db, $_POST['precio']);
     $descripcion = mysqli_real_escape_string($db, $_POST['descripcion']);
@@ -70,17 +62,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     //Validar imagen por tamaño (100kb maximo)
+    $medida = 1000 * 1000;
+    if($imagen['size'] > $medida){
+        $errores[] = "La imagen es demasiado grande. Maximo 1MB";
+    }
     
 
     if (empty($errores)) {
+
+        /* Subida de archivos */
+        //Crear carpeta
+        $carpetaImagenes = '../../imagenes/';
+        if (!is_dir($carpetaImagenes)) {
+            mkdir($carpetaImagenes, 0755, true);
+        }
+
+        //generar un nombre unico para las imagenes
+        $nombreImagen = md5(uniqid(rand(), true)). '.jpg';
+
+        //Subir la imagen
+        move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+
         //Insertar en la base de datos
-        $query = "INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id) VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedor_id')";
+        $query = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id) VALUES ('$titulo', '$precio', '$nombreImagen','$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedor_id')";
 
         $resultado = mysqli_query($db, $query);
 
         if ($resultado) {
             // Redireccionar al usuario
-            header('Location: /admin/index.php');
+            header('Location: /admin/index.php?resultado=1');
             exit;
         }
     }
