@@ -79,21 +79,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errores)) {
 
-        // /* Subida de archivos */
-        // //Crear carpeta
-        // $carpetaImagenes = '../../imagenes/';
-        // if (!is_dir($carpetaImagenes)) {
-        //     mkdir($carpetaImagenes, 0755, true);
-        // }
+        //Crear carpeta
+        $carpetaImagenes = '../../imagenes/';
+        if (!is_dir($carpetaImagenes)) {
+            mkdir($carpetaImagenes, 0755, true);
+        }
 
-        // //generar un nombre unico para las imagenes
-        // $nombreImagen = md5(uniqid(rand(), true)). '.jpg';
+        $nombreImagen = '';
 
-        // //Subir la imagen
-        // move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+        /* Subida de archivos */
+
+        if($imagen['name']){
+            unlink($carpetaImagenes . $propiedad['imagen']);
+
+            //generar un nombre unico para las imagenes
+            $nombreImagen = md5(uniqid(rand(), true)). '.jpg';
+            
+            //Subir la imagen
+            move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen);
+        }else{
+            $nombreImagen = $propiedad['imagen'];
+        }
 
         //Insertar en la base de datos
-        $query = "UPDATE propiedades SET titulo = '$titulo', precio = $precio, descripcion = '$descripcion', habitaciones = $habitaciones, wc = $wc, estacionamiento = $estacionamiento, vendedores_id = $vendedor_id WHERE id = $id";
+        $query = "UPDATE propiedades SET titulo = '$titulo', precio = $precio, imagen = '$nombreImagen' , descripcion = '$descripcion', habitaciones = $habitaciones, wc = $wc, estacionamiento = $estacionamiento, vendedores_id = $vendedor_id WHERE id = $id";
 
         $resultado = mysqli_query($db, $query);
 
@@ -104,7 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
     require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
