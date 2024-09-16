@@ -1,5 +1,13 @@
 <?php
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+    require '../includes/funciones.php';
 
+    $auth = estaAutenticado();
+    if (!$auth) {
+        header('Location: /index.php');
+    }
+    
     //Importar la conexion
     require '../includes/config/database.php';
     $db = conectarDB();
@@ -36,7 +44,6 @@
     }
 
     //Incluye un template
-    require '../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

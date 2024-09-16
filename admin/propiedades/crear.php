@@ -1,7 +1,12 @@
 <?php
     require '../../includes/config/database.php';
-
+    require '../../includes/funciones.php';
+    $auth = estaAutenticado();
+    if (!$auth) {
+        header('Location: /index.php');
+    }
     $db = conectarDB();
+
 
     //Concultar para obtener los vendedores de la base de datos
     $consulta = "SELECT * FROM vendedores";
@@ -95,8 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-    require '../../includes/funciones.php';
     incluirTemplate('header');
 ?>
 

@@ -1,4 +1,12 @@
 <?php
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+    require '../../includes/funciones.php';
+    $auth = estaAutenticado();
+    if (!$auth) {
+        header('Location: /index.php');
+    }
+
     //Validar la url por un ID valido
     $id = $_GET['id'];
     $id = filter_var($id, FILTER_VALIDATE_INT);
@@ -6,6 +14,8 @@
         header('Location: /admin/index.php');
         exit;
     }
+
+
 
     //base de datos
     require '../../includes/config/database.php';
@@ -113,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-    require '../../includes/funciones.php';
+
     incluirTemplate('header');
 ?>
 
